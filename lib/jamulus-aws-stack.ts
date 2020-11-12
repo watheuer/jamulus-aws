@@ -2,8 +2,9 @@ import { BlockDeviceVolume, Vpc, Instance, EbsDeviceVolumeType, InstanceClass, I
 import * as s3 from '@aws-cdk/aws-s3';
 import * as cdk from '@aws-cdk/core';
 
-const keyPairName = process.env.KEY_PAIR_NAME;
-const localCidrRange = process.env.LOCAL_CIDR_RANGE;
+const keyPairName = process.env.KEY_PAIR_NAME!;
+const localCidrRange = process.env.LOCAL_CIDR_RANGE!;
+const jamulusPort = process.env.JAMULUS_PORT!;
 
 export class JamulusAwsStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
@@ -14,13 +15,15 @@ export class JamulusAwsStack extends cdk.Stack {
       maxAzs: 1
     });
 
+    // Security group for inbound ssh and public Jamulus port
     const securityGroup = new SecurityGroup(this, 'JamulusSecurityGroup', {
       vpc: vpc,
       allowAllOutbound: true
     });
-    securityGroup.addIngressRule(Peer.ipv4(localCidrRange!), Port.tcp(22), "Local SSH")
+    securityGroup.addIngressRule(Peer.ipv4(localCidrRange), Port.tcp(22), "Local SSH")
+    securityGroup.addIngressRule(Peer.anyIpv4(), Port.udp(Number(jamulusPort)), "Public Jamulus")
 
-    const jamulusServer = new Instance(this, 'JamulusInstance', {
+    const jamulusInstance = new Instance(this, 'JamulusInstance', {
       vpc: vpc,
       vpcSubnets: vpc.selectSubnets({
         subnetType: SubnetType.PUBLIC
