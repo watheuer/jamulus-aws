@@ -44,5 +44,27 @@ export class JamulusAwsStack extends cdk.Stack {
       }],
       keyName: keyPairName
     });
+
+    const secondaryInstance = new Instance(this, 'BigJamulusInstance', {
+      vpc: vpc,
+      vpcSubnets: vpc.selectSubnets({
+        subnetType: SubnetType.PUBLIC
+      }),
+      securityGroup: securityGroup,
+      machineImage: MachineImage.lookup({
+        name: 'ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-20201026',
+        windows: false,
+        owners: ['099720109477']
+      }),
+      instanceType: InstanceType.of(InstanceClass.M5, InstanceSize.XLARGE),
+      blockDevices: [{
+        deviceName: "/dev/sda1",
+        volume: BlockDeviceVolume.ebs(24, {
+          deleteOnTermination: false,
+          volumeType: EbsDeviceVolumeType.GENERAL_PURPOSE_SSD
+        }),
+      }],
+      keyName: keyPairName
+    });
   }
 }
