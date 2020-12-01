@@ -23,7 +23,7 @@ export class JamulusAwsStack extends cdk.Stack {
     securityGroup.addIngressRule(Peer.ipv4(localCidrRange), Port.tcp(22), "Local SSH")
     securityGroup.addIngressRule(Peer.anyIpv4(), Port.udp(Number(jamulusPort)), "Public Jamulus")
 
-    const jamulusInstance = new Instance(this, 'JamulusInstance', {
+    const instance = new Instance(this, 'JamulusInstance', {
       vpc: vpc,
       vpcSubnets: vpc.selectSubnets({
         subnetType: SubnetType.PUBLIC
@@ -34,33 +34,11 @@ export class JamulusAwsStack extends cdk.Stack {
         windows: false,
         owners: ['099720109477']
       }),
-      instanceType: InstanceType.of(InstanceClass.T2, InstanceSize.MICRO),
+      instanceType: InstanceType.of(InstanceClass.M5, InstanceSize.XLARGE8),
       blockDevices: [{
         deviceName: "/dev/sda1",
         volume: BlockDeviceVolume.ebs(24, {
-          deleteOnTermination: false,
-          volumeType: EbsDeviceVolumeType.GENERAL_PURPOSE_SSD
-        }),
-      }],
-      keyName: keyPairName
-    });
-
-    const secondaryInstance = new Instance(this, 'BigJamulusInstance', {
-      vpc: vpc,
-      vpcSubnets: vpc.selectSubnets({
-        subnetType: SubnetType.PUBLIC
-      }),
-      securityGroup: securityGroup,
-      machineImage: MachineImage.lookup({
-        name: 'ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-20201026',
-        windows: false,
-        owners: ['099720109477']
-      }),
-      instanceType: InstanceType.of(InstanceClass.M5, InstanceSize.XLARGE),
-      blockDevices: [{
-        deviceName: "/dev/sda1",
-        volume: BlockDeviceVolume.ebs(24, {
-          deleteOnTermination: false,
+          deleteOnTermination: true,
           volumeType: EbsDeviceVolumeType.GENERAL_PURPOSE_SSD
         }),
       }],
