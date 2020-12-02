@@ -1,6 +1,9 @@
 import { BlockDeviceVolume, Vpc, Instance, EbsDeviceVolumeType, InstanceClass, InstanceSize, InstanceType, MachineImage, SubnetType, SecurityGroup, Peer, Port } from '@aws-cdk/aws-ec2';
 import * as s3 from '@aws-cdk/aws-s3';
 import * as cdk from '@aws-cdk/core';
+import { config } from 'dotenv';
+
+config();  // Populate process.env from .env
 
 const keyPairName = process.env.KEY_PAIR_NAME!;
 const localCidrRange = process.env.LOCAL_CIDR_RANGE!;
