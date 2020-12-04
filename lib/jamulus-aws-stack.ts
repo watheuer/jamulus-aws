@@ -15,7 +15,14 @@ export class JamulusAwsStack extends cdk.Stack {
 
     const s3Bucket = new s3.Bucket(this, 'JamulusBucket', {});
     const vpc = new Vpc(this, 'JamulusVpc', {
-      maxAzs: 1
+      maxAzs: 1,
+      subnetConfiguration: [
+        {
+          cidrMask: 28,
+          name: 'public',
+          subnetType: SubnetType.PUBLIC
+        }
+      ]
     });
 
     // Security group for inbound ssh and public Jamulus port
