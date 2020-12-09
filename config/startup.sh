@@ -15,11 +15,8 @@ make clean && make
 sudo make install
 sudo adduser --system --no-create-home jamulus
 
-# TODO: Copy file from S3
-sudo apt install awscli -y
-
-sudo cp jamulus.service /etc/systemd/system/jamulus.service
+# Start server
+sudo cp /tmp/jamulus.service /etc/systemd/system/jamulus.service
 sudo chmod 644 /etc/systemd/system/jamulus.service
 sudo systemctl start jamulus
 sudo systemctl enable jamulus
-
