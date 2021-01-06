@@ -15,7 +15,7 @@ IOSchedulingPriority=0
 
 #### Change this to set genre, location and other parameters.
 #### See [Command-Line-Options](Command-Line-Options) ####
-ExecStart=/usr/local/bin/Jamulus -s -n -o "ChoralArts;Washington,DC;225" -p 4841 -u 65 --multithreading
+ExecStart=/usr/local/bin/Jamulus -s -n -o "ChoralArts;Washington,DC;225" -p 4841 -u 120 --multithreading
 
 Restart=on-failure
 RestartSec=30
