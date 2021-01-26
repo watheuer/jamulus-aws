@@ -9,12 +9,14 @@ const keyPairName = process.env.KEY_PAIR_NAME!;
 const sshCidrRange = process.env.LOCAL_CIDR_RANGE!;
 const jamulusPort = Number(process.env.JAMULUS_PORT!);
 const instanceType = process.env.INSTANCE_TYPE!;
+const account = process.env.AWS_ACCOUNT_NUMBER!;
+const region = process.env.AWS_REGION!;
 
 const app = new cdk.App();
 new JamulusAwsStack(app, 'JamulusAwsStack', {
   env: {
-    account: '092565164179',
-    region: 'us-east-1'
+    account,
+    region
   },
   keyPairName,
   sshCidrRange,
