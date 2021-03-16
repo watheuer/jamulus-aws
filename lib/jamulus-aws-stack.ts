@@ -75,7 +75,7 @@ export class JamulusAwsStack extends cdk.Stack {
       instanceType: new InstanceType(props.instanceType),
       blockDevices: [{
         deviceName: "/dev/sda1",
-        volume: BlockDeviceVolume.ebs(24, {
+        volume: BlockDeviceVolume.ebs(8, {
           deleteOnTermination: true,
           volumeType: EbsDeviceVolumeType.GENERAL_PURPOSE_SSD
         }),
